@@ -1,16 +1,15 @@
 import express from "express";
 import cors from "cors";
 
-const app = express();
+export const app = express();
 
-//middlewares
+//parsers
 app.use(cors());
 app.use(express.json());
 
+//routes
 app.get("/api", (req, res) => {
   res.send("Welcome");
 });
 
-app.listen(5000, () => {
-    console.log('http://localhost:5000/api');
-})
+export default app;
