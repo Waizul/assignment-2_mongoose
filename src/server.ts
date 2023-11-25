@@ -6,8 +6,8 @@ async function main() {
   try {
     mongoose.connect(config.database_url as string);
 
-    app.listen(5000, () => {
-      console.log("http://localhost:5000/api");
+    app.listen(config.port, () => {
+      console.log("http://localhost:" + config.port + "/api");
     });
   } catch (err) {
     console.log(err);
