@@ -1,10 +1,11 @@
-import express from "express";
+import { UserType } from "./user.interface";
+import User from "./user.module";
 
-const userRoute = express.Router();
+const createUserIntoDB = async (user: UserType) => {
+  const newUser = await User.create(user);
+  return newUser;
+};
 
-userRoute.post("/");
-userRoute.get("/", (req, res) => {
-    res.send('user route')
-})
-
-export default userRoute;
+export const UserServices = {
+  createUserIntoDB,
+};

@@ -21,13 +21,14 @@ const orderSchema = new Schema<OrderType>({
 const userSchema = new Schema<UserType>({
   userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
   fullName: userNameSchema,
   age: { type: Number },
   email: { type: String },
   isActive: { type: Boolean, default: true },
   hobbies: { type: [String] },
   address: addressSchema,
-  orders: orderSchema,
+  orders: [orderSchema],
 });
 
 const User = model<UserType>("User", userSchema);
