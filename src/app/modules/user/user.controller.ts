@@ -58,7 +58,7 @@ const getUsers = async (req: Request, res: Response) => {
 const getSingletUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-
+    //@ts-ignore
     if (await User.isUserExists(userId)) {
       const result = await UserServices.getSingleUserFromDB(userId);
       //@ts-ignore
@@ -95,6 +95,7 @@ const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const { user } = req.body;
+    //@ts-ignore
     if (await User.isUserExists(userId)) {
       const validatedUserData = userValidationSchema.parse(user);
       const result = await UserServices.updateUserIntoDB(
@@ -135,6 +136,7 @@ const updateUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
+    //@ts-ignore
     if (await User.isUserExists(userId)) {
       await UserServices.deleteUserFromDB(userId);
       res.status(200).json({
