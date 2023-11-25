@@ -91,13 +91,16 @@ const getSingletUser = async (req: Request, res: Response) => {
   }
 };
 
-const updatetUser = async (req: Request, res: Response) => {
+const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const { user } = req.body;
     if (await User.isUserExists(userId)) {
       const validatedUserData = userValidationSchema.parse(user);
-      const result = await UserServices.updateUserIntoDB(userId, validatedUserData);
+      const result = await UserServices.updateUserIntoDB(
+        userId,
+        validatedUserData
+      );
       // console.log('result', result)
       //@ts-ignore
       const { password, ...rest } = result._doc;
@@ -129,9 +132,43 @@ const updatetUser = async (req: Request, res: Response) => {
   }
 };
 
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    if (await User.isUserExists(userId)) {
+      await UserServices.deleteUserFromDB(userId);
+      res.status(200).json({
+        success: true,
+        message: "User deleted successfully!",
+        data: null,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    }
+  } catch (err: any) {
+    res.status(400).json({
+      success: false,
+      message: err.message || "Something went wrong",
+      error: {
+        code: 400,
+        description: "Something went wrong",
+      },
+    });
+    console.log(err);
+  }
+};
+
 export const UserControllers = {
   createUser,
   getUsers,
   getSingletUser,
-  updatetUser,
+  updateUser,
+  deleteUser,
 };
