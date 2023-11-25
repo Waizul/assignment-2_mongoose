@@ -9,5 +9,7 @@ userRoute.get("/", UserControllers.getUsers);
 
 userRoute.get("/:userId", UserControllers.getSingletUser);
 
+userRoute.put("/:userId", UserControllers.updatetUser);
+
 
 export default userRoute;

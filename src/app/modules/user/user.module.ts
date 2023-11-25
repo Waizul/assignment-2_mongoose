@@ -68,8 +68,8 @@ userSchema.pre("find", async function (next) {
   next();
 });
 
-// userSchema.post("findOne", async function (id, next) {
-//   this.find({userId: id}).select("-password");
+// userSchema.post("findOneAndUpdate", async function (user, next) {
+//   this.findOneAndUpdate({ userId: user.userId, user });
 //   next();
 // });
 
