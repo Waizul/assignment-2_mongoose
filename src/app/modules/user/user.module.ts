@@ -44,7 +44,17 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-
+// userSchema.post('save', function(error:any, doc, next) {
+//   if (error.name === 'MongoServerError' && error.code === 11000) {
+//     next(new Error('There was a duplicate key error'));
+//   } else {
+//     next();
+//   }
+// });
+userSchema.pre("find", async function (next) {
+  this.find().select("username fullName age email address");
+  next();
+});
 const User = model<UserType>("User", userSchema);
 
 export default User;

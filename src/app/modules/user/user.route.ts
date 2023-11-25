@@ -5,8 +5,7 @@ const userRoute = express.Router();
 
 userRoute.post("/", UserControllers.createUser);
 
-userRoute.get("/", (req, res) => {
-    res.send('user route')
-})
+userRoute.get("/", UserControllers.getUsers);
+
 
 export default userRoute;
