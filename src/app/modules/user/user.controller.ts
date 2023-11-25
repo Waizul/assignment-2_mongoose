@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 
 import { UserServices } from "./user.service";
+import userValidationSchema from "./user.validation";
 
 const createUser = async (req: Request, res: Response) => {
   try {
     const { user } = req.body;
-    const result = await UserServices.createUserIntoDB(user);
+    const validatedUserData = userValidationSchema.parse(user)
+
+    const result = await UserServices.createUserIntoDB(validatedUserData);
 
     res.status(201).json({
       success: true,
@@ -18,6 +21,7 @@ const createUser = async (req: Request, res: Response) => {
       message: "Data validation failed",
       data: err,
     });
+    console.log(err)
   }
 };
 
