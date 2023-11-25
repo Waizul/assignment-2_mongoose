@@ -1,5 +1,8 @@
 import { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
+
 import { AddressType, NameType, OrderType, UserType } from "./user.interface";
+import config from "../../config";
 
 const userNameSchema = new Schema<NameType>({
   firstName: { type: String },
@@ -30,6 +33,17 @@ const userSchema = new Schema<UserType>({
   address: addressSchema,
   orders: [orderSchema],
 });
+
+//hashing user password before saving to mongodb database
+userSchema.pre("save", async function (next) {
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_round)
+  );
+  next();
+});
+
 
 const User = model<UserType>("User", userSchema);
 

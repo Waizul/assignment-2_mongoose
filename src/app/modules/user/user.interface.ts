@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 export type NameType = {
   firstName: string;
   lastName: string;
@@ -25,3 +27,7 @@ export type OrderType = {
   price: number;
   quantity: number;
 };
+
+export interface UserModel extends Model<UserType> {
+  
+}
