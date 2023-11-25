@@ -29,5 +29,5 @@ export type OrderType = {
 };
 
 export interface UserModel extends Model<UserType> {
-  
+  isUserExists(id: string): Promise<UserType | null>;
 }

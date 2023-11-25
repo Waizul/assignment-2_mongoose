@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { UserServices } from "./user.service";
 import userValidationSchema from "./user.validation";
+import User from "./user.module";
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -54,7 +55,43 @@ const getUsers = async (req: Request, res: Response) => {
   }
 };
 
+const getSingletUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    if (await User.isUserExists(userId)) {
+      const result = await UserServices.getSingleUserFromDB(userId);
+
+      const { password, ...rest } = result._doc;
+      res.status(200).json({
+        success: true,
+        message: "User fetched successfully!",
+        data: rest,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    }
+  } catch (err: any) {
+    res.status(400).json({
+      success: false,
+      message: err.message || "Something went wrong",
+      error: {
+        code: 400,
+        description: "Something went wrong",
+      },
+    });
+    console.log(err);
+  }
+};
+
 export const UserControllers = {
   createUser,
   getUsers,
+  getSingletUser,
 };

@@ -1,7 +1,13 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 
-import { AddressType, NameType, OrderType, UserType } from "./user.interface";
+import {
+  AddressType,
+  NameType,
+  OrderType,
+  UserModel,
+  UserType,
+} from "./user.interface";
 import config from "../../config";
 
 const userNameSchema = new Schema<NameType>({
@@ -21,7 +27,7 @@ const orderSchema = new Schema<OrderType>({
   quantity: { type: Number },
 });
 
-const userSchema = new Schema<UserType>({
+const userSchema = new Schema<UserType, UserModel>({
   userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -33,6 +39,12 @@ const userSchema = new Schema<UserType>({
   address: addressSchema,
   orders: [orderSchema],
 });
+
+//custom static method to find out a user exists or not
+userSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await User.findOne({ userId: id });
+  return existingUser;
+};
 
 //hashing user password before saving to mongodb database
 userSchema.pre("save", async function (next) {
@@ -55,6 +67,12 @@ userSchema.pre("find", async function (next) {
   this.find().select("username fullName age email address");
   next();
 });
+
+// userSchema.post("findOne", async function (id, next) {
+//   this.find({userId: id}).select("-password");
+//   next();
+// });
+
 const User = model<UserType>("User", userSchema);
 
 export default User;
