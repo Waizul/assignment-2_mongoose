@@ -1,4 +1,4 @@
-import { UserType } from "./user.interface";
+import { OrderType, UserType } from "./user.interface";
 import User from "./user.module";
 
 const createUserIntoDB = async (user: UserType) => {
@@ -16,7 +16,7 @@ const getSingleUserFromDB = async (userId: string) => {
   return user;
 };
 
-const updateUserIntoDB = async (userId: string, user: UserType) => {
+const updateUserIntoDB = async (userId: string, user: Partial<UserType>) => {
   const nuserId = Number(userId);
   const updatedUser = await User.findOneAndUpdate({ userId: nuserId }, user, {
     new: true,
@@ -31,10 +31,41 @@ const deleteUserFromDB = async (userId: string) => {
   return null;
 };
 
+const updateOrdersIntoDB = async (userId: string, order: OrderType) => {
+  const nuserId = Number(userId);
+  const orderUpdated = await User.updateOne(
+    { userId: nuserId },
+    {
+      $addToSet: {
+        orders: order,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  return orderUpdated;
+};
+
+const getOrdersFromDB = async (userId: string) => {
+  const nuserId = Number(userId);
+  const orders = await User.findOne({ userId: nuserId }).select("orders");
+  return orders;
+};
+
+const getOrdersTotalPriceFromDB = async (userId: string) => {
+  const nuserId = Number(userId);
+  const orders = await User.findOne({ userId: nuserId }).select("orders");
+  return orders;
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
   updateUserIntoDB,
   deleteUserFromDB,
+  updateOrdersIntoDB,
+  getOrdersFromDB,
+  getOrdersTotalPriceFromDB,
 };

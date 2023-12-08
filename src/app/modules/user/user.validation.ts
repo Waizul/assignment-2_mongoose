@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import { AddressType, NameType, OrderType, UserType } from "./user.interface";
-
 const userNameValidationSchema = z.object({
   firstName: z
     .string({
@@ -83,4 +81,41 @@ const userValidationSchema = z.object({
   orders: z.array(orderValidationSchema).optional(),
 });
 
-export default userValidationSchema;
+const updateUserValidationSchema = z.object({
+  userId: z
+    .number({
+      required_error: "UserId is required",
+      invalid_type_error: "UserId must be a number",
+    })
+    .min(5, "UserId must be 5 digits long.").optional(),
+  username: z
+    .string({
+      required_error: "Username is required",
+      invalid_type_error: "Username must be a string",
+    })
+    .min(4, "Username must be more than 4 characters.").optional(),
+  password: z
+    .string({
+      required_error: "Password is required",
+      invalid_type_error: "Password must be a string",
+    })
+    .min(6, "Password must be more than 6 characters.").optional(),
+  fullName: userNameValidationSchema.optional(),
+  age: z
+    .number({
+      required_error: "Age is required",
+      invalid_type_error: "Age must be a number",
+    })
+    .min(14, "Age must be at least 14 years old.")
+    .max(120, "Age must be less than 120 years old.").optional(),
+  email: z.string().email("Invalid email address.").optional(),
+  isActive: z.boolean().optional(),
+  hobbies: z.string().array().optional(),
+  address: addressValidationSchema.optional(),
+  orders: z.array(orderValidationSchema).optional(),
+});
+
+export const UserValidations = {
+  userValidationSchema,
+  updateUserValidationSchema,
+};
